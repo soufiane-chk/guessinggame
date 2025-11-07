@@ -1,0 +1,31 @@
+name: Generate README from Makefile
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Ensure make is available
+        run: sudo apt-get update && sudo apt-get install -y make
+
+      - name: Generate README with make
+        run: make
+
+      - name: Commit generated README
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions
+          author_email: actions@github.com
+          message: "Auto-generate README.md via Makefile"
+          add: README.md
